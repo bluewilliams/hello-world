@@ -2,9 +2,10 @@ import type { Boss } from '../types';
 
 interface Props {
   boss: Boss;
+  tell?: string;
 }
 
-function BossCard({ boss }: Props) {
+function BossCard({ boss, tell }: Props) {
   const percent = Math.max(6, Math.round((boss.health / boss.maxHealth) * 100));
 
   return (
@@ -20,6 +21,7 @@ function BossCard({ boss }: Props) {
         </div>
         <p className="hint">Quirk: {boss.quirk}</p>
         <p className="hint">Weakness: {boss.weakness.toUpperCase()}</p>
+        {tell && <p className="hint callout">Next: {tell}</p>}
       </div>
     </div>
   );

@@ -3,8 +3,9 @@
 A hybrid-ready mobile game prototype where spelling words casts spells against theatrical bosses. The repo is structured for a React + Vite web build that can be wrapped with Capacitor for iOS/Android.
 
 ## Highlights
-- **Core loop demo:** Draft words from a letter pool, discover new spells, and recast them with mana.
-- **Boss variety:** Three themed bosses (Leximancer, Queen Anagramma, Silent Editor) with distinct quirks.
+- **Combat loop:** Draft words from a letter pool, discover new spells, and recast them with mana and a growing combo multiplier.
+- **Boss pressure:** Three themed bosses (Leximancer, Queen Anagramma, Silent Editor) with distinct quirks, tells, and a counterattack turn.
+- **Player agency:** Shields, mana regen, rerollable letter pools, and spell traits (palindromes, rare letters, weakness hits) that change damage and rewards.
 - **Mobile-friendly UI:** Responsive layout, tactile tile styling, and lightweight CSS with no external UI kit.
 - **Capacitor ready:** `capacitor.config.ts` preconfigured for wrapping the Vite build.
 
@@ -29,10 +30,10 @@ A hybrid-ready mobile game prototype where spelling words casts spells against t
    ```
 
 ## Next steps
-- Add validation against a dictionary service to score real words.
-- Implement enemy attack turns and player shields/blocks.
-- Wire analytics + persistence for learned spells.
-- Hook up RevenueCat/ads as desired.
+- Wire a real dictionary validator to gate damage and award bigger bonuses for rare words.
+- Build the Forge/upgrade screen between bosses (augment spells, add mana shards, reroll perks).
+- Persist runs + analytics events and add hooks for RevenueCat/IAPs.
+- Layer in VFX (hit sparks, screen shake, haptics) and a soundtrack loop.
 
 ## License
 MIT

@@ -83,6 +83,20 @@ button {
   margin: 4px 0 0;
 }
 
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.stat-card h3 {
+  margin: 4px 0;
+}
+
+.meter.chunky {
+  height: 16px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -125,6 +139,15 @@ button {
   margin: 4px 0;
 }
 
+.hint.callout {
+  display: inline-block;
+  background: rgba(137, 240, 255, 0.08);
+  color: #f5f7fb;
+  padding: 6px 10px;
+  border-radius: 10px;
+  margin-top: 6px;
+}
+
 .lede {
   color: var(--muted);
   margin-top: 0;
@@ -163,6 +186,11 @@ button {
 
 .ghost:hover {
   background: rgba(255, 255, 255, 0.04);
+}
+
+.ghost:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .boss-card {
@@ -223,6 +251,14 @@ button {
   background: rgba(255, 255, 255, 0.04);
   color: #f5f7fb;
   font-size: 15px;
+}
+
+.letter-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .spellbook {

@@ -3,9 +3,11 @@ import type { Spell } from '../types';
 interface Props {
   spells: Spell[];
   onRecast: (spell: Spell) => void;
+  disabled?: boolean;
+  manaAvailable?: number;
 }
 
-function Spellbook({ spells, onRecast }: Props) {
+function Spellbook({ spells, onRecast, disabled = false, manaAvailable = 0 }: Props) {
   return (
     <div className="spellbook">
       {spells.map((spell) => (
@@ -17,7 +19,11 @@ function Spellbook({ spells, onRecast }: Props) {
           </div>
           <div className="spell-actions">
             <p className="mana">{spell.manaCost} MP</p>
-            <button className="ghost" onClick={() => onRecast(spell)}>
+            <button
+              className="ghost"
+              onClick={() => onRecast(spell)}
+              disabled={disabled || manaAvailable < spell.manaCost}
+            >
               Recast
             </button>
           </div>
