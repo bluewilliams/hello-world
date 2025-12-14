@@ -196,12 +196,44 @@ button {
 .boss-card {
   display: grid;
   grid-template-columns: 2fr 1fr;
+  grid-template-areas:
+    'visual health'
+    'skills skills';
   gap: 12px;
   align-items: center;
-  padding: 12px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(137, 240, 255, 0.1), rgba(255, 255, 255, 0.02));
+  padding: 16px;
+  border-radius: 14px;
   border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.boss-visual {
+  grid-area: visual;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sigil {
+  width: 74px;
+  height: 74px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  transition: transform 0.2s ease;
+}
+
+.boss-card:hover .sigil {
+  transform: translateY(-2px) scale(1.03);
+}
+
+.boss-health {
+  grid-area: health;
 }
 
 .boss-health .health-bar {
@@ -216,6 +248,21 @@ button {
   background: linear-gradient(90deg, #ff7b7b, #ff4545);
   height: 100%;
   transition: width 0.25s ease;
+}
+
+.boss-skills {
+  grid-area: skills;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.skill-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .letter-pool .letters {
@@ -312,5 +359,9 @@ button {
 
   .boss-card {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      'visual'
+      'health'
+      'skills';
   }
 }

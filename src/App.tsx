@@ -29,9 +29,11 @@ const initialPlayer: PlayerState = {
   combo: 0
 };
 
+const initialBoss: Boss = pickBoss();
+
 function App() {
-  const [boss, setBoss] = useState<Boss>(pickBoss());
-  const [letters, setLetters] = useState(generateLetters(9));
+  const [boss, setBoss] = useState<Boss>(initialBoss);
+  const [letters, setLetters] = useState(generateLetters(9, initialBoss.element, initialBoss.letterBias));
   const [spellbook, setSpellbook] = useState<Spell[]>(initialSpellbook);
   const [log, setLog] = useState<string[]>(['Battle initiated.']);
   const [mana, setMana] = useState(3);
@@ -47,11 +49,10 @@ function App() {
   const encounterActive = boss.health > 0 && player.health > 0;
 
   const bossTell = useMemo(() => {
-    const cycle = turn % 3;
-    if (cycle === 0) return 'Charged strike incoming—shields help.';
-    if (cycle === 1) return 'Studying you—damage slightly reduced.';
-    return 'Quick jab; push your combo!';
-  }, [turn]);
+    if (!boss.skills.length) return '';
+    const cycle = (turn - 1) % boss.skills.length;
+    return boss.skills[cycle]?.tell;
+  }, [boss.skills, turn]);
 
   const resolveBossTurn = (projectedTurn: number, projectedBossHealth: number) => {
     setTurn(projectedTurn);
@@ -103,7 +104,7 @@ function App() {
       ...prev
     ]);
     setBoss((prev) => ({ ...prev, health: newBossHealth }));
-    setLetters(generateLetters(9));
+    setLetters(generateLetters(9, boss.element, boss.letterBias));
     setMana((prev) => Math.min(8, prev + resolution.manaBonus));
     setPlayer((prev) => ({
       ...prev,
@@ -152,8 +153,9 @@ function App() {
   };
 
   const handleNewRun = () => {
-    setBoss(pickBoss());
-    setLetters(generateLetters(9));
+    const freshBoss = pickBoss();
+    setBoss(freshBoss);
+    setLetters(generateLetters(9, freshBoss.element, freshBoss.letterBias));
     setSpellbook(initialSpellbook);
     setLog(['New encounter.']);
     setMana(3);
@@ -163,7 +165,7 @@ function App() {
 
   const handleReroll = () => {
     if (!encounterActive) return;
-    setLetters(generateLetters(9));
+    setLetters(generateLetters(9, boss.element, boss.letterBias));
     setLog((prev) => ['Letter pool rerolled.', ...prev]);
   };
 

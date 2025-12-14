@@ -7,13 +7,29 @@ export type WordTrait =
   | 'palindrome'
   | 'weakness-hit';
 
+export interface BossSkill {
+  name: string;
+  description: string;
+  tell: string;
+}
+
 export interface Boss {
   name: string;
+  title: string;
   description: string;
   health: number;
   maxHealth: number;
   quirk: string;
   weakness: Element;
+  element: Element;
+  sigil: string;
+  palette: {
+    base: string;
+    glow: string;
+    accent: string;
+  };
+  skills: BossSkill[];
+  letterBias?: string;
 }
 
 export interface PlayerState {

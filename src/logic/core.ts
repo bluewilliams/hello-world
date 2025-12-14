@@ -1,43 +1,110 @@
-import type { Boss, Element, WordResolution, WordTrait } from '../types';
+import type { Boss, BossSkill, Element, WordResolution, WordTrait } from '../types';
 
-const bosses: Boss[] = [
+const archetypes: Array<
+  Omit<Boss, 'name' | 'title' | 'health' | 'maxHealth' | 'skills'> & {
+    baseHealth: number;
+    signatureSkills: BossSkill[];
+  }
+> = [
   {
-    name: 'The Leximancer',
+    title: 'The Leximancer',
     description: 'A flaming tome that consumes vowels every third turn.',
-    health: 220,
-    maxHealth: 220,
     quirk: 'Removes vowels; vulnerable to long words.',
-    weakness: 'fire'
+    weakness: 'fire',
+    element: 'fire',
+    sigil: '📕',
+    palette: { base: '#120808', glow: '#ff4d2e', accent: '#ffb347' },
+    letterBias: 'FLARE',
+    baseHealth: 220,
+    signatureSkills: [
+      { name: 'Vowel Burn', description: 'Consumes vowels from your pool.', tell: 'Pages ignite; vowels smolder.' },
+      { name: 'Incinerate', description: 'Heavy hit if you played short words.', tell: 'Spits embers at close range.' }
+    ]
   },
   {
-    name: 'Queen Anagramma',
+    title: 'Queen Anagramma',
     description: 'She scrambles learned spells, forcing improvisation.',
-    health: 180,
-    maxHealth: 180,
     quirk: 'Scrambles spell names each round.',
-    weakness: 'arcane'
+    weakness: 'arcane',
+    element: 'arcane',
+    sigil: '🕸️',
+    palette: { base: '#0c0a17', glow: '#6f62ff', accent: '#c0b7ff' },
+    letterBias: 'AEIOQNRST',
+    baseHealth: 200,
+    signatureSkills: [
+      { name: 'Scramble', description: 'Shuffles discovered spells.', tell: 'Threads weave; your book rattles.' },
+      { name: 'Mirror Bite', description: 'Copies your last element.', tell: 'Reflective glyphs shimmer.' }
+    ]
   },
   {
-    name: 'The Silent Editor',
+    title: 'The Silent Editor',
     description: 'Rejects typos and punishes sloppy spelling.',
-    health: 200,
-    maxHealth: 200,
     quirk: 'Invalid words trigger backlash.',
-    weakness: 'void'
+    weakness: 'void',
+    element: 'void',
+    sigil: '✒️',
+    palette: { base: '#050608', glow: '#0cf2c9', accent: '#7fffe0' },
+    letterBias: 'EDTIRN',
+    baseHealth: 210,
+    signatureSkills: [
+      { name: 'Red Pen', description: 'Backlash on invalid words.', tell: 'Ink drips—don’t misspell.' },
+      { name: 'Silence', description: 'Weakens repeated spells.', tell: 'The air hushes ominously.' }
+    ]
   }
 ];
 
+const bossAdjectives = ['Elder', 'Glitched', 'Astral', 'Volatile', 'Primordial', 'Gilded', 'Runic'];
+const bossSuffixes = ['of the Stack', 'of Ruin', 'of Echoes', 'of Cinders', 'of Frost', 'of Static'];
+
+function sample<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function rollSkills(signatureSkills: BossSkill[]): BossSkill[] {
+  const remix: BossSkill[] = [...signatureSkills];
+  const extra: BossSkill[] = [
+    { name: 'Phase Shift', description: 'Gains shield every third turn.', tell: 'Reality blurs around the boss.' },
+    { name: 'Echo Pulse', description: 'Repeats the previous attack at half damage.', tell: 'A second wave builds.' },
+    { name: 'Mana Siphon', description: 'Reduces your mana if you play short words.', tell: 'Runes drain the arena.' }
+  ];
+  remix.push(sample(extra));
+  return remix;
+}
+
 export function pickBoss(): Boss {
-  return bosses[Math.floor(Math.random() * bosses.length)];
+  const archetype = sample(archetypes);
+  const adjective = sample(bossAdjectives);
+  const suffix = sample(bossSuffixes);
+  const variantHealth = archetype.baseHealth + Math.round(Math.random() * 35);
+  const name = `${adjective} ${archetype.title}`;
+
+  return {
+    ...archetype,
+    name,
+    title: suffix,
+    description: `${archetype.description} This variant is ${adjective.toLowerCase()} and ${suffix.toLowerCase()}.`,
+    health: variantHealth,
+    maxHealth: variantHealth,
+    skills: rollSkills(archetype.signatureSkills)
+  };
 }
 
 const letterBag = 'AABCDEEEFGHIIIJKLMNOOPQRSTUUVXYZ';
+const elementBias: Record<Element, string> = {
+  fire: 'FIR',
+  ice: 'ICE',
+  void: 'VOD',
+  arcane: 'ARC',
+  storm: 'STO'
+};
 
-export function generateLetters(count: number): string[] {
+export function generateLetters(count: number, focus?: Element, biasLetters?: string): string[] {
   const output: string[] = [];
+  const biasPool = `${biasLetters ?? ''}${focus ? elementBias[focus] : ''}`;
+  const pool = `${letterBag}${biasPool}`;
   for (let i = 0; i < count; i += 1) {
-    const index = Math.floor(Math.random() * letterBag.length);
-    output.push(letterBag[index]);
+    const index = Math.floor(Math.random() * pool.length);
+    output.push(pool[index]);
   }
   return output;
 }
